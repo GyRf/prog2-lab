@@ -1,0 +1,10 @@
+{
+  "name": "prog2-lab-server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs",
+    "start:local": "JAVA_RUNNER=local node index.mjs",
+    "test": "node --test"
+  }
+}
