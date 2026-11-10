@@ -1,0 +1,18 @@
+# Blueprint de Render: servidor de ejecución Java (plan gratuito).
+services:
+  - type: web
+    name: prog2-lab-java
+    runtime: docker
+    plan: free
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    healthCheckPath: /api/health
+    envVars:
+      - key: ALLOWED_ORIGIN
+        value: https://gyrf.github.io,http://localhost:5173
+      - key: JAVA_MAX_CONCURRENT
+        value: "2"
+      - key: JAVA_MAX_QUEUE
+        value: "30"
+      - key: RATE_LIMIT_PER_MIN
+        value: "30"

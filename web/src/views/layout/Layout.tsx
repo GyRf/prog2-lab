@@ -16,8 +16,8 @@ const NAV = [
 ]
 
 function ServerPill() {
-  const { serverStatus, runner, recheckServer } = useServices()
-  const label = serverStatus === 'online' ? `Java: conectado${runner === 'local' ? ' (local)' : ''}` : serverStatus === 'checking' ? 'Java: verificando…' : 'Java: sin servidor'
+  const { serverStatus, recheckServer } = useServices()
+  const label = serverStatus === 'online' ? 'Java: conectado' : serverStatus === 'checking' ? 'Java: conectando (puede tardar ~1 min)…' : 'Java: sin servidor'
   const color = serverStatus === 'online' ? 'var(--ok)' : serverStatus === 'checking' ? 'var(--muted)' : 'var(--warn)'
   return (
     <button onClick={recheckServer} className="chip w-full justify-start" title={serverStatus === 'offline' ? 'Sin servidor: se analiza el código pero no se compila ni ejecuta. Ver README para iniciarlo. Click para reintentar.' : 'Click para volver a verificar'}>

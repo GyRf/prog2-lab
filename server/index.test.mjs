@@ -17,3 +17,11 @@ test('parsea compilación fallida y timeout', () => {
   assert.equal(to.timedOut, true)
   assert.equal(to.stdout.trim(), 'hola')
 })
+
+test('rate limit por IP', async () => {
+  const { rateLimited } = await import('./index.mjs')
+  let blocked = false
+  for (let i = 0; i < 40; i++) blocked = rateLimited('1.2.3.4', 1000 + i)
+  assert.equal(blocked, true)
+  assert.equal(rateLimited('5.6.7.8', 2000), false)
+})

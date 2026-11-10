@@ -37,7 +37,8 @@ export function AppServicesProvider({ children }: { children: ReactNode }) {
   const recheckServer = useCallback(() => {
     setStatus('checking')
     const ctl = new AbortController()
-    const t = setTimeout(() => ctl.abort(), 2000)
+    // 70 s: el hosting gratuito "duerme" el servidor y tarda ~1 min en despertar.
+    const t = setTimeout(() => ctl.abort(), 70_000)
     fetch(`${API}/health`, { signal: ctl.signal })
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((j: { runner: string }) => { setRunner(j.runner); setStatus('online') })

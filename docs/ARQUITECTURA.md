@@ -15,7 +15,8 @@
 - Modo `docker`: contenedor descartable por pedido con `--network none`, `--memory 256m`, `--cpus 1`, `--pids-limit 128`, `--read-only`, `/tmp` tmpfs de 64 MB, `--cap-drop ALL`, `no-new-privileges`, usuario `nobody`, código montado sólo lectura, `--rm`.
 - Timeout de proceso (15 s) y de ejecución (5 s), salida truncada a 64 KB, cuerpo máximo 256 KB, concurrencia limitada.
 - Validación de nombres de archivo y clase principal (sin inyección de comandos). Directorio temporal eliminado siempre.
-- Escucha sólo en 127.0.0.1. Modo `local` sólo para uso personal (avisa por consola).
+- Escucha en 127.0.0.1 salvo `HOST`. Cola de ejecuciones (`JAVA_MAX_CONCURRENT`, `JAVA_MAX_QUEUE`) y rate limit por IP.
+- Modo `local` (usado en Render, donde no hay Docker): `javac -proc:none` (sin annotation processors) y `java` con Security Manager y política vacía, en JDK 21. Bloquea red, archivos y procesos; el contenedor corre como usuario sin privilegios y no guarda secretos.
 
 ## Análisis de código
 Parser liviano (no compilador) que extrae clases, campos y métodos, más reglas heurísticas con severidad **error real / mala práctica / mejora opcional**, línea, código, explicación, por qué, sugerencia, ejemplo corregido y concepto. Es estático: puede tener falsos positivos/negativos.
