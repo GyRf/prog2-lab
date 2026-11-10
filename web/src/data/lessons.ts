@@ -81,6 +81,97 @@ public List<String> getJugadores() {
     ],
     exerciseIds: ['aliasing-equipo'],
   },
+  {
+    id: 'arraylist', unit: 'u1', title: 'List y ArrayList: listas de objetos', concepts: ['arraylist', 'referencias', 'encapsulamiento'],
+    quizId: 'quiz-u1',
+    blocks: [
+      { type: 'p', text: 'List es una interfaz de java.util: define qué se puede hacer con una lista ordenada (agregar, obtener por posición, buscar, eliminar). ArrayList es una de sus implementaciones, la más usada.' },
+      { type: 'p', text: 'ArrayList es una lista de tamaño variable: crece sola a medida que agregás elementos, mantiene el orden de inserción y permite acceder por posición (índice desde 0). Está en java.util, así que hay que importarla.' },
+      { type: 'code', caption: 'Declarar y crear', code: `import java.util.ArrayList;
+import java.util.List;
+
+List<Pitufo> pitufos = new ArrayList<>();   // tipo de la variable: la interfaz List
+List<Integer> numeros = new ArrayList<>();  // con primitivos se usa la clase envoltorio
+// List<int> no compila: los genéricos sólo aceptan objetos` },
+      { type: 'tip', text: 'Declarar la variable como List y crear un ArrayList permite cambiar la implementación sin tocar el resto del código. Es lo que se espera en los parciales.' },
+      { type: 'h', text: 'Métodos que más se usan' },
+      { type: 'list', items: [
+        'add(e): agrega al final. add(i, e) inserta en la posición i y corre el resto.',
+        'get(i): devuelve el elemento de la posición i. set(i, e) lo reemplaza.',
+        'size(): cantidad de elementos (no length, que es de los arreglos). isEmpty(): si no tiene ninguno.',
+        'contains(e) e indexOf(e): buscan usando equals, así que dependen de que la clase lo redefina.',
+        'remove(i) elimina por posición; remove(objeto) elimina la primera aparición según equals.',
+        'clear(): vacía la lista. addAll(otra): agrega todos los elementos de otra colección.',
+      ] },
+      { type: 'warn', text: 'Con List<Integer>, numeros.remove(1) borra la POSICIÓN 1, no el número 1. Para borrar el valor: numeros.remove(Integer.valueOf(1)).' },
+      { type: 'h', text: 'Recorrer' },
+      { type: 'code', caption: 'for-each, por índice y eliminar mientras se recorre', code: `for (Pitufo p : pitufos) {             // for-each: el más claro para leer todos
+    System.out.println(p.getNombre());
+}
+
+for (int i = 0; i < pitufos.size(); i++) { // por índice: cuando necesitás la posición
+    System.out.println(i + ": " + pitufos.get(i).getNombre());
+}
+
+// Para eliminar mientras recorrés, usá el Iterator (o removeIf):
+Iterator<Pitufo> it = pitufos.iterator();
+while (it.hasNext()) {
+    if (it.next().getExperiencia() == 0) it.remove();
+}
+pitufos.removeIf(p -> p.getExperiencia() == 0); // equivalente` },
+      { type: 'warn', text: 'Llamar a lista.remove(...) dentro de un for-each sobre esa misma lista lanza ConcurrentModificationException.' },
+      { type: 'h', text: 'La lista dentro de una clase' },
+      { type: 'p', text: 'Lo habitual es que un objeto tenga una lista como atributo privado y ofrezca métodos con significado de dominio. Así controla qué se agrega y los cálculos sobre los elementos los hace él (experto en información).' },
+      { type: 'code', caption: 'Lista encapsulada', code: `public class Aldea {
+    private final List<Pitufo> pitufos = new ArrayList<>();
+
+    public void agregar(Pitufo p) {
+        if (!pitufos.contains(p)) pitufos.add(p);
+    }
+
+    public int experienciaTotal() {
+        int total = 0;
+        for (Pitufo p : pitufos) total += p.getExperiencia();
+        return total;
+    }
+
+    public List<Pitufo> getPitufos() {
+        return new ArrayList<>(pitufos); // copia: el cliente no puede modificar la interna
+    }
+}` },
+      { type: 'h', text: 'Copias y referencias' },
+      { type: 'p', text: 'La lista guarda referencias a los objetos, no copias. new ArrayList<>(otra) crea una lista nueva pero con los MISMOS objetos adentro (copia superficial): si modificás un Pitufo desde una lista, el cambio se ve desde la otra.' },
+      { type: 'h', text: 'Ordenar' },
+      { type: 'code', caption: 'Ordenar con un Comparator', code: `pitufos.sort(Comparator.comparing(Pitufo::getNombre));          // por nombre
+pitufos.sort(Comparator.comparingInt(Pitufo::getExperiencia).reversed()); // mayor experiencia primero` },
+      { type: 'h', text: 'List: programar contra la interfaz' },
+      { type: 'p', text: 'Como List es una interfaz, no se puede hacer new List<>(). Sí se usa como tipo de variables, atributos, parámetros y retornos. Así el método acepta cualquier implementación y no queda acoplado a ArrayList.' },
+      { type: 'code', caption: 'Parámetros y retornos de tipo List', code: `public int contarActivos(List<Pitufo> lista) { // sirve para ArrayList, LinkedList, List.of(...)
+    int n = 0;
+    for (Pitufo p : lista) if (p.estaActivo()) n++;
+    return n;
+}
+
+List<Pitufo> a = new ArrayList<>();   // la más usada: acceso por índice rápido
+List<Pitufo> b = new LinkedList<>();  // otra implementación, mismo protocolo` },
+      { type: 'list', items: [
+        'ArrayList: get(i) es inmediato; insertar o borrar al principio obliga a correr los elementos.',
+        'LinkedList: insertar y borrar en los extremos es barato; get(i) recorre la lista.',
+        'List.of(a, b, c): lista inmodificable. add o remove lanzan UnsupportedOperationException.',
+        'Collections.unmodifiableList(lista): vista de sólo lectura de una lista existente (los cambios en la original se ven).',
+        'List es un subtipo de Collection, que también incluye a Set (sin repetidos ni posiciones).',
+      ] },
+      { type: 'tip', text: 'List<Pitufo> no es subtipo de List<Personaje> aunque Pitufo extienda Personaje. Para aceptar listas de subclases usá List<? extends Personaje> (sólo para leer).' },
+      { type: 'h', text: 'Errores frecuentes' },
+      { type: 'list', items: [
+        'get(i) con i fuera de 0..size()-1 lanza IndexOutOfBoundsException.',
+        'Usar el atributo sin inicializar (sin = new ArrayList<>()) lanza NullPointerException al primer add.',
+        'Comparar Integer de la lista con == en vez de equals: falla con valores grandes.',
+        'Devolver la lista interna en un getter: el cliente puede agregar o borrar elementos sin pasar por la clase.',
+      ] },
+    ],
+    exerciseIds: ['aliasing-equipo'],
+  },
   // ======================= UNIDAD 2 =======================
   {
     id: 'herencia', unit: 'u2', title: 'Herencia, redefinición, this y super', concepts: ['herencia', 'redefinicion', 'this-super', 'constructores', 'visibilidad'],

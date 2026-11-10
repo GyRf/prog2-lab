@@ -19,6 +19,7 @@ export const CONCEPTS: Concept[] = [
   c('u1', 'encapsulamiento', 'Encapsulamiento', 'Ocultar el estado interno y exponer comportamiento.'),
   c('u1', 'responsabilidades', 'Responsabilidades', 'Cada objeto es responsable de lo que sabe y lo que hace. Relación cliente-servidor.'),
   c('u1', 'referencias', 'Referencias y aliasing', 'Varias variables pueden referenciar al mismo objeto.'),
+  c('u1', 'arraylist', 'ArrayList y List', 'Lista de tamaño variable: agregar, buscar, recorrer y eliminar elementos sin romper el encapsulamiento.'),
   // U2
   c('u2', 'herencia', 'Herencia', 'Generalización y especialización: la subclase es un tipo de la superclase.'),
   c('u2', 'redefinicion', 'Redefinición y sobrecarga', '@Override reemplaza comportamiento heredado; la sobrecarga cambia la firma.'),
